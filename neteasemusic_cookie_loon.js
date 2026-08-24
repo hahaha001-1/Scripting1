@@ -7,9 +7,18 @@ const $ = new Env('网易云音乐')
   session.body = $request.body
   session.headers = $request.headers
   delete session.headers['Content-Length']
-  $.log('', `url: ${session.url}`, `body: ${session.body}`, `headers: ${JSON.stringify(session.headers)}`)
-  if ($.setdata(JSON.stringify(session), 'chavy_cookie_neteasemusic')) {
+  // 关键修复：只有带登录态(MUSIC_U)的请求才保存，避免被无 cookie 的请求覆盖
+  const h = session.headers || {}
+  const cookieStr = h['cookie'] || h['Cookie'] || ''
+  const hasMusicU = /MUSIC_U=/.test(cookieStr)
+  $.log('', `url: ${session.url}`, `含MUSIC_U: ${hasMusicU}`, `cookie前60: ${cookieStr.slice(0, 60)}`)
+  if (!hasMusicU) {
+    $.subt = '跳过: 该请求无 MUSIC_U'
+    $.desc = '请触发带登录态的请求(如播放/刷新)'
+    $.log('⚠️ 该请求不含 MUSIC_U，已跳过，不覆盖已有会话')
+  } else if ($.setdata(JSON.stringify(session), 'chavy_cookie_neteasemusic')) {
     $.subt = '获取会话: 成功!'
+    $.desc = '已抓取含 MUSIC_U 的登录态'
   } else {
     $.subt = '获取会话: 失败!'
   }
