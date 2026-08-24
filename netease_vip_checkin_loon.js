@@ -20,7 +20,7 @@ const $ = new Env('网易云会员打卡');
 // ===== 纯 JS 加解密实现（不依赖 $crypto / $zlib，兼容无 $crypto 的 Loon）=====
 const HAS_CRYPTO = typeof $crypto !== 'undefined';
 const HAS_ZLIB = typeof $zlib !== 'undefined';
-$.log('环境: $crypto=' + HAS_CRYPTO + ' $zlib=' + HAS_ZLIB + ' $httpClient=' + (typeof $httpClient !== 'undefined'));
+$.log('【脚本版本 v20260824-2 已加载】环境: $crypto=' + HAS_CRYPTO + ' $zlib=' + HAS_ZLIB + ' $httpClient=' + (typeof $httpClient !== 'undefined'));
 
 const EAPI_KEY = 'e82ckenh8dichen8';
 
